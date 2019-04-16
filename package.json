@@ -1,0 +1,20 @@
+{
+  "name": "ipfs-hash-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.6.1",
+    "base58": "^1.0.1",
+    "bs58": "^4.0.1",
+    "ipfs": "^0.29.3",
+    "ipld-dag-pb": "^0.14.4",
+    "multihashes": "^0.4.13"
+  }
+}

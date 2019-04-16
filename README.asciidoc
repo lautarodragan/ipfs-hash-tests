@@ -1,0 +1,45 @@
+# IPFS Hash Tests
+
+This is a loose repository where I run some tests to understand how IPFS hashes are made.
+
+May add other IPFS related tests, too. Might rename the repository to just `ipfs-tests` in the future, as well.
+
+## Current Tests
+
+### src/index.js
+
+These tests use the https://github.com/multiformats/js-multihash[multihash] library and NodeJS crypto
+to generate a multihash out of a piece of content and compare it to the multihash returned by IPFS.
+
+It runs `ipfs add` and `ipfs block put` commands with `child_process.exec`, so you need to have the
+IPFS daemon installed and running in your local machine for this to work.
+
+May switch to using the js version of IPFS, as does the alexanderattar test.
+
+### src/alexanderattar.js
+
+This is a test by https://github.com/alexanderattar[Alexander Attar]
+originally shared in https://github.com/ipfs/js-ipfs/issues/1205#issuecomment-370943323[a GitHub issue]
+and later modified by https://github.com/fazo96[Enrico Fasoli]
+in https://github.com/ipfs/js-ipfs/issues/1205#issuecomment-371134571[a later comment in the same GitHub issue].
+
+Alexand pointed me to this test in https://github.com/ipfs/faq/issues/22#issuecomment-392861610[this GitHub issue].
+
+It uses https://github.com/ipld/js-ipld-dag-pb[js-ipld-dag-pb] to manually create a DAGNode,
+https://github.com/ipfs/js-ipfs[js-ipfs] to create an IPFS object, and compares the two hashes.
+
+The two match.
+
+It then runs a traditional `add` with the same content. It generates a new hash, different from the one
+resulting of manually creating a DAGNode or running `ipfs object put`.
+
+Although running `ipfs cat` on the multihash of the added file returns exactly the same content
+byte for byte, running `ipfs object get` on that multihash returns a slightly larger buffer.
+
+```
+Buffer.from('Hello'): <Buffer 48 65 6c 6c 6f>
+ipfs cat: <Buffer 48 65 6c 6c 6f>
+ipfs object get: <Buffer 08 02 12 05 48 65 6c 6c 6f 18 05>
+```
+
+The `ipfs object get` version is `08 02 12 05 + Buffer.from('Hello') + 08 02 12 05`.
